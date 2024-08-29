@@ -11,7 +11,6 @@ import {
   IonCardContent,
   IonImg,
   IonButton,
-  IonBackButton,
 } from '@ionic/react';
 import { useParams } from 'react-router-dom';
 
@@ -29,13 +28,28 @@ interface PokemonStats {
   vit: number;
 }
 
-interface EvolutionDetail {
-  id: number;
-  name: {
-    fr: string;
-    en: string;
-    jp: string;
-  };
+
+ interface Pre{
+  pokedex_id: number;
+  name:string;
+  condition : string;
+ }
+
+ interface Next{
+  pokedex_id: number;
+  name:string;
+  condition : string;
+ }
+
+
+interface Resistance {
+  name: string; // Assuming the resistance has a name
+  multiplier: number;
+}
+
+interface Talents {
+  name: string;
+  tc: boolean;
 }
 
 interface Pokemon {
@@ -54,16 +68,24 @@ interface Pokemon {
   };
   types: PokemonType[];
   stats: PokemonStats;
+  talents: Talents[]; 
+  resistances: Resistance[]; 
   evolution: {
-    pre: {
-        pokedex_id: number,
-          name: string,
-          condition: string
-    }| null;
-         
-    next: EvolutionDetail[];
-  };
-}
+		pre:
+			| {
+					pokedex_id: number;
+					name: string;
+					condition: string;
+			  }[]
+			| null;
+		next:
+			| {
+					pokedex_id: number;
+					name: string;
+					condition: string;
+			  }[]
+			| null;
+}}
 
 const PokemonDetail: React.FC = () => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -76,7 +98,6 @@ const PokemonDetail: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        console.log(pokemon?.name); // Affiche toutes les données récupérées
         setPokemon(data);
         setLoading(false);
       })
@@ -86,7 +107,7 @@ const PokemonDetail: React.FC = () => {
         setLoading(false);
       });
   }, [id]);
-  
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -107,16 +128,23 @@ const PokemonDetail: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonCard>
+        <IonCard style={{ textAlign: 'center' }}>
           <IonCardHeader>
             <IonCardTitle>{pokemon.name.fr} (#{pokemon.pokedex_id})</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            <IonImg
-              src={pokemon.sprites.regular}
-              alt={pokemon.name.fr}
-              style={{ width: '200px', height: '200px' }}
-            />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <IonImg
+                src={pokemon.sprites.regular}
+                alt={pokemon.name.fr}
+                style={{ width: '200px', height: '200px', margin: '0 10px' }}
+              />
+              <IonImg
+                src={pokemon.sprites.shiny}
+                alt={`${pokemon.name.fr} Shiny`}
+                style={{ width: '200px', height: '200px', margin: '0 10px' }}
+              />
+            </div>
             <h3>Noms</h3>
             <p>Français: {pokemon.name.fr}</p>
             <p>Anglais: {pokemon.name.en}</p>
@@ -124,7 +152,10 @@ const PokemonDetail: React.FC = () => {
             <h3>Types</h3>
             {pokemon.types && pokemon.types.length > 0 ? (
               pokemon.types.map((type) => (
-                <div key={type.name} style={{ display: 'flex', alignItems: 'center' }}>
+                <div
+                  key={type.name}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}
+                >
                   <IonImg src={type.image} alt={type.name} style={{ width: '50px', marginRight: '8px' }} />
                   <span>{type.name}</span>
                 </div>
@@ -133,7 +164,7 @@ const PokemonDetail: React.FC = () => {
               <div>Aucun type disponible</div>
             )}
             <h3>Statistiques</h3>
-            <ul>
+            <ul style={{ listStyleType: 'none', padding: 0 }}>
               <li>HP: {pokemon.stats.hp}</li>
               <li>Attaque: {pokemon.stats.atk}</li>
               <li>Défense: {pokemon.stats.def}</li>
@@ -141,32 +172,58 @@ const PokemonDetail: React.FC = () => {
               <li>Défense Spéciale: {pokemon.stats.spe_def}</li>
               <li>Vitesse: {pokemon.stats.vit}</li>
             </ul>
-            <h3>Évolutions</h3>
-            {/* Affichage des pré-évolutions */}
-            {pokemon.evolution.pre ? (
-              <div>
-                <h4>Pré-évolution:</h4>
-                <p>{pokemon.evolution.pre.name} (Français)</p>
-              </div>
-            ) : (
-              <div>Pas de pré-évolution disponible</div>
-            )}
-            {/* Affichage des évolutions suivantes */}
-            {pokemon.evolution.next && pokemon.evolution.next.length > 0 ? (
-              <div>
-                <h4>Évolutions suivantes:</h4>
-                {pokemon.evolution.next.map((evolution) => (
-                  <div key={evolution.id}>
-                    <p>{evolution.name.fr} (Français)</p>
-                    <p>{evolution.name.en} (Anglais)</p>
-                    <p>{evolution.name.jp} (Japonais)</p>
-                  </div>
+            <h2>Talents :</h2>
+            {pokemon.talents && pokemon.talents.length > 0 ? (
+              <ul style={{ listStyleType: 'none', padding: 0 }}>
+                {pokemon.talents.map((talents) => (
+                  <li key={talents.name}>
+                    {talents.name}
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
-              <div>Pas d'évolution suivante disponible</div>
+              <div>Pas de talents disponibles</div>
             )}
-            <IonButton expand="full" onClick={() => window.history.back()}>
+            <h3>Résistances :</h3>
+            {pokemon.resistances && pokemon.resistances.length > 0 ? (
+             <ul style={{ listStyleType: 'none', padding: 0 }}>
+                {pokemon.resistances.map((resistance) => (
+                  <li key={resistance.name}>
+                    {resistance.name} - {resistance.multiplier}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>Pas de résistances disponibles</div>
+            )}
+            <h2>Evolutions :</h2>
+            {pokemon.evolution.pre && pokemon.evolution.pre.length > 0 ? (
+              <ul style={{ listStyleType: 'none', padding: 0 }}>
+                {pokemon.evolution.pre.map((pre) => (
+                  <li key={pre.name}>
+                    {pre.name} - #{pre.pokedex_id}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>Pas de pré-évolution</div>
+            )}
+            {pokemon.evolution.next && pokemon.evolution.next.length > 0 ? (
+              <ul style={{ listStyleType: 'none', padding: 0 }}>
+                {pokemon.evolution.next.map((next) => (
+                  <li key={next.name}>
+                    {next.name} - #{next.pokedex_id}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div>Pas de pré-évolution</div>
+            )}
+            <IonButton
+              expand="block"
+              style={{ width: '200px', margin: '10px auto' }}
+              onClick={() => window.history.back()}
+            >
               Retour
             </IonButton>
           </IonCardContent>
