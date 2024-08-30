@@ -1,3 +1,4 @@
+// PokemonList.tsx
 import React, { useEffect, useState } from 'react';
 import {
   IonPage,
@@ -19,28 +20,8 @@ import {
   IonInput,
   useIonRouter,
 } from '@ionic/react';
-
-interface PokemonType {
-  name: string;
-  image: string;
-}
-
-interface Pokemon {
-  pokedex_id: number;
-  generation: number;
-  category: string;
-  name: {
-    fr: string;
-    en: string;
-    jp: string;
-  };
-  sprites: {
-    regular: string;
-    shiny: string;
-    gmax: string | null;
-  };
-  types: PokemonType[];
-}
+import ListSkeleton from '../components/ListSkeleton';
+import { Pokemon, PokemonType } from '../types/interface'; // Import interfaces
 
 const PokemonList: React.FC = () => {
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
@@ -86,7 +67,7 @@ const PokemonList: React.FC = () => {
   );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <ListSkeleton />; // Display the skeleton while loading
   }
 
   if (error) {

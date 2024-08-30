@@ -17,62 +17,7 @@ import {
   useIonRouter,
 } from '@ionic/react';
 import { useParams, useHistory } from 'react-router-dom';
-
-interface PokemonType {
-  name: string;
-  image: string;
-}
-
-interface PokemonStats {
-  hp: number;
-  atk: number;
-  def: number;
-  spe_atk: number;
-  spe_def: number;
-  vit: number;
-}
-
-interface Evolution {
-  pokedex_id: number;
-  name: string;
-  condition: string;
-}
-
-interface Resistance {
-  name: string;
-  multiplier: number;
-}
-
-interface Talents {
-  name: string;
-  tc: boolean;
-}
-
-interface Pokemon {
-  pokedex_id: number;
-  generation: number;
-  category: string;
-  name: {
-    fr: string;
-    en: string;
-    jp: string;
-  };
-  sprites: {
-    regular: string;
-    shiny: string | null;
-    gmax: string | null;
-  };
-  types: PokemonType[];
-  stats: PokemonStats;
-  talents: Talents[];
-  resistances: Resistance[];
-  evolution: {
-    pre: Evolution[] | null;
-    next: Evolution[] | null;
-  } | null;
-  height: string | null;
-  weight: string | null;
-}
+import { Pokemon, PokemonType, Talents, Resistance, Evolution, PokemonStats } from '../types/interface'; // Import interfaces
 
 const PokemonDetail: React.FC = () => {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -86,7 +31,6 @@ const PokemonDetail: React.FC = () => {
     fetch(`https://tyradex.vercel.app/api/v1/pokemon/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setPokemon(data);
         setLoading(false);
       })
@@ -125,25 +69,25 @@ const PokemonDetail: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>{pokemon.name.fr} (#{pokemon.pokedex_id})</IonTitle>
+          <IonTitle>{pokemon?.name?.fr} (#{pokemon?.pokedex_id})</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonCard style={{ textAlign: 'center' }}>
           <IonCardHeader>
-            <IonCardTitle>{pokemon.name.fr} (#{pokemon.pokedex_id})</IonCardTitle>
+            <IonCardTitle>{pokemon?.name?.fr} (#{pokemon?.pokedex_id})</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <IonImg
-                src={pokemon.sprites.regular}
-                alt={pokemon.name.fr}
+                src={pokemon?.sprites?.regular}
+                alt={pokemon?.name?.fr}
                 style={{ width: '200px', height: '200px', margin: '0 10px' }}
               />
-              {pokemon.sprites.shiny && (
+              {pokemon?.sprites?.shiny && (
                 <IonImg
                   src={pokemon.sprites.shiny}
-                  alt={`${pokemon.name.fr} Shiny`}
+                  alt={`${pokemon?.name?.fr} Shiny`}
                   style={{ width: '200px', height: '200px', margin: '0 10px' }}
                 />
               )}
@@ -154,9 +98,9 @@ const PokemonDetail: React.FC = () => {
               <IonItem>
                 <IonLabel>
                   <h1>Noms</h1>
-                  <p>Français: {pokemon.name.fr}</p>
-                  <p>Anglais: {pokemon.name.en}</p>
-                  <p>Japonais: {pokemon.name.jp}</p>
+                  <p>Français: {pokemon?.name?.fr}</p>
+                  <p>Anglais: {pokemon?.name?.en}</p>
+                  <p>Japonais: {pokemon?.name?.jp}</p>
                 </IonLabel>
               </IonItem>
             </IonList>
@@ -166,7 +110,7 @@ const PokemonDetail: React.FC = () => {
               <IonItem>
                 <IonLabel>
                   <h1>Types</h1>
-                  {pokemon.types && pokemon.types.length > 0 ? (
+                  {pokemon?.types && pokemon.types.length > 0 ? (
                     pokemon.types.map((type) => (
                       <div
                         key={type.name}
@@ -192,26 +136,35 @@ const PokemonDetail: React.FC = () => {
               <IonItem>
                 <IonLabel>
                   <h1>Statistiques</h1>
-                  <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    <li>HP: {pokemon.stats.hp}</li>
-                    <li>Attaque: {pokemon.stats.atk}</li>
-                    <li>Défense: {pokemon.stats.def}</li>
-                    <li>Attaque Spéciale: {pokemon.stats.spe_atk}</li>
-                    <li>Défense Spéciale: {pokemon.stats.spe_def}</li>
-                    <li>Vitesse: {pokemon.stats.vit}</li>
-                  </ul>
+                  {pokemon?.stats ? (
+                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                      <li>HP: {pokemon.stats.hp}</li>
+                      <li>Attaque: {pokemon.stats.atk}</li>
+                      <li>Défense: {pokemon.stats.def}</li>
+                      <li>Attaque Spéciale: {pokemon.stats.spe_atk}</li>
+                      <li>Défense Spéciale: {pokemon.stats.spe_def}</li>
+                      <li>Vitesse: {pokemon.stats.vit}</li>
+                    </ul>
+                  ) : (
+                    <div>Pas de statistiques disponibles</div>
+                  )}
                 </IonLabel>
               </IonItem>
             </IonList>
 
+            {/* Caractéristiques */}
             <IonList>
               <IonItem>
                 <IonLabel>
                   <h1>Caractéristiques</h1>
-                  <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    <li>Poids: {pokemon.weight}</li>
-                    <li>Taille: {pokemon.height}</li>
-                  </ul>
+                  {pokemon?.weight && pokemon?.height ? (
+                    <ul style={{ listStyleType: 'none', padding: 0 }}>
+                      <li>Poids: {pokemon.weight}</li>
+                      <li>Taille: {pokemon.height}</li>
+                    </ul>
+                  ) : (
+                    <div>Pas de caractéristiques disponibles</div>
+                  )}
                 </IonLabel>
               </IonItem>
             </IonList>
@@ -221,7 +174,7 @@ const PokemonDetail: React.FC = () => {
               <IonItem>
                 <IonLabel>
                   <h1>Talents</h1>
-                  {pokemon.talents && pokemon.talents.length > 0 ? (
+                  {pokemon?.talents && pokemon.talents.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                       {pokemon.talents.map((talent) => (
                         <li key={talent.name}>{talent.name}</li>
@@ -239,7 +192,7 @@ const PokemonDetail: React.FC = () => {
               <IonItem>
                 <IonLabel>
                   <h1>Résistances</h1>
-                  {pokemon.resistances && pokemon.resistances.length > 0 ? (
+                  {pokemon?.resistances && pokemon.resistances.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                       {pokemon.resistances.map((resistance) => (
                         <li key={resistance.name}>
@@ -259,7 +212,7 @@ const PokemonDetail: React.FC = () => {
               <IonItem>
                 <IonLabel>
                   <h1>Évolutions</h1>
-                  {pokemon.evolution?.pre && pokemon.evolution.pre.length > 0 ? (
+                  {pokemon?.evolution?.pre && pokemon.evolution.pre.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                       {pokemon.evolution.pre.map((pre) => (
                         <li key={pre.name}>
@@ -270,7 +223,7 @@ const PokemonDetail: React.FC = () => {
                   ) : (
                     <div>Pas de pré-évolution</div>
                   )}
-                  {pokemon.evolution?.next && pokemon.evolution.next.length > 0 ? (
+                  {pokemon?.evolution?.next && pokemon.evolution.next.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                       {pokemon.evolution.next.map((next) => (
                         <li key={next.name}>
@@ -285,6 +238,7 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
+            {/* Navigation Buttons */}
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
               <IonButton
                 expand="block"
