@@ -12,7 +12,7 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { ellipse, square, triangle } from 'ionicons/icons';
 
-import PokemonDetails from './pages/PokemonDetails';
+
 import PokemonDetail from './pages/PokemonDetail'; // Assurez-vous d'importer le composant PokemonDetail
 
 import MoviesPage from './pages/MoviesPage';
@@ -39,6 +39,7 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import PokemonList from './pages/PokemonList';
 
 setupIonicReact();
 
@@ -47,17 +48,14 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/pokemon-details">
-            <PokemonDetails />
+          <Route exact path="/pokemon-list">
+            <PokemonList />
           </Route>
           <Route exact path="/pokemon-detail/:id">
             <PokemonDetail />
           </Route>
           <Route path="/movies">
             <MoviesPage />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/tab1" />
           </Route>
           <Route path="/movies" component={MoviesPage} exact={true} />
         <Route exact path="/" render={() => <Redirect to="/movies" />} />
@@ -67,7 +65,7 @@ const App: React.FC = () => (
 
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="tab2" href="/pokemon-details">
+          <IonTabButton tab="tab2" href="/pokemon-list">
             <IonIcon aria-hidden="true" icon={ellipse} />
             <IonLabel>Pokémons</IonLabel>
           </IonTabButton>
