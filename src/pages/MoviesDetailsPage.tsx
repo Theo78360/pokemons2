@@ -28,7 +28,7 @@ const MovieDetailPage: React.FC = () => {
 
   const fetchMovieDetails = async (movieId: string) => {
     try {
-      const response = await axios.get(`http://movies-api.julienpoirier-webdev.com/infos/movies/${movieId}`);
+      const response = await axios.get(`https://movies-api.julienpoirier-webdev.com/infos/movies/${movieId}`);
       setMovie(response.data);
     } catch (error) {
       console.error('Error fetching movie details:', error);

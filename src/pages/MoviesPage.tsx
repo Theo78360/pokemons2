@@ -27,7 +27,7 @@ const MoviesPage: React.FC = () => {
 
   const searchMovies = async (query: string) => {
     try {
-      const response = await axios.get(`http://movies-api.julienpoirier-webdev.com/search/movies/${query}`);
+      const response = await axios.get(`https://movies-api.julienpoirier-webdev.com/search/movies/${query}`);
       setMovies(response.data.results || response.data);
     } catch (error) {
       console.error('Error fetching movies:', error);
