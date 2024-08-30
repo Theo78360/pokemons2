@@ -14,6 +14,7 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  useIonRouter,
 } from '@ionic/react';
 import { useParams, useHistory } from 'react-router-dom';
 
@@ -79,6 +80,7 @@ const PokemonDetail: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
+  const router = useIonRouter();
 
   useEffect(() => {
     fetch(`https://tyradex.vercel.app/api/v1/pokemon/${id}`)
@@ -295,7 +297,7 @@ const PokemonDetail: React.FC = () => {
               <IonButton
                 expand="block"
                 style={{ width: '150px', margin: '0 10px' }}
-                onClick={() => window.history.back()}
+                href="/pokemon-list"
               >
                 Retour
               </IonButton>
