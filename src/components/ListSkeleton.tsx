@@ -12,7 +12,7 @@ import {
 } from '@ionic/react';
 
 const ListSkeleton: React.FC = () => {
-  const skeletonItems = Array.from({ length: 6 }); // Number of skeleton cards to display
+  const skeletonItems = Array.from({ length: 12});
 
   return (
     <IonGrid>

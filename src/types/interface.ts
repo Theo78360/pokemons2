@@ -1,4 +1,3 @@
-// Interface representing a Pokémon Type
 export interface PokemonType {
 	name: string;
 	image: string;

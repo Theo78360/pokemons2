@@ -43,7 +43,7 @@ const PokemonDetail: React.FC = () => {
 
   const goToPreviousPokemon = () => {
     const previousId = pokemon?.pokedex_id ? pokemon.pokedex_id - 1 : 1;
-    if (previousId >= 1) {
+    if (previousId >= 0) {
       history.push(`/pokemon-detail/${previousId}`);
     }
   };
@@ -93,7 +93,7 @@ const PokemonDetail: React.FC = () => {
               )}
             </div>
 
-            {/* Noms */}
+      
             <IonList>
               <IonItem>
                 <IonLabel>
@@ -105,7 +105,7 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
-            {/* Types */}
+            
             <IonList>
               <IonItem>
                 <IonLabel>
@@ -131,7 +131,7 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
-            {/* Statistiques */}
+          
             <IonList>
               <IonItem>
                 <IonLabel>
@@ -152,7 +152,7 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
-            {/* Caractéristiques */}
+          
             <IonList>
               <IonItem>
                 <IonLabel>
@@ -169,7 +169,7 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
-            {/* Talents */}
+         
             <IonList>
               <IonItem>
                 <IonLabel>
@@ -187,7 +187,7 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
-            {/* Résistances */}
+          
             <IonList>
               <IonItem>
                 <IonLabel>
@@ -207,7 +207,7 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
-            {/* Evolutions */}
+            
             <IonList>
               <IonItem>
                 <IonLabel>
@@ -238,13 +238,11 @@ const PokemonDetail: React.FC = () => {
               </IonItem>
             </IonList>
 
-            {/* Navigation Buttons */}
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
               <IonButton
                 expand="block"
                 style={{ width: '150px', margin: '0 10px' }}
                 onClick={goToPreviousPokemon}
-                disabled={pokemon.pokedex_id === 1}
               >
                 Précédent
               </IonButton>

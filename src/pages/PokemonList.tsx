@@ -1,4 +1,4 @@
-// PokemonList.tsx
+
 import React, { useEffect, useState } from 'react';
 import {
   IonPage,
@@ -21,14 +21,14 @@ import {
   useIonRouter,
 } from '@ionic/react';
 import ListSkeleton from '../components/ListSkeleton';
-import { Pokemon, PokemonType } from '../types/interface'; // Import interfaces
+import { Pokemon, PokemonType } from '../types/interface';
 
 const PokemonList: React.FC = () => {
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>(''); // State to hold the search term
+  const [searchTerm, setSearchTerm] = useState<string>(''); 
   const router = useIonRouter();
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const PokemonList: React.FC = () => {
       });
   }, []);
 
-  // Filter by type and search term
+  
   const filteredPokemon = pokemonData
     .filter((pokemon) =>
       selectedType ? pokemon.types?.some((type) => type.name === selectedType) : true
@@ -61,13 +61,13 @@ const PokemonList: React.FC = () => {
         : true
     );
 
-  // Extract unique types, ensuring types array is handled safely
+  
   const uniqueTypes = Array.from(
     new Set(pokemonData.flatMap((pokemon) => pokemon.types?.map((type) => type.name) || []))
   );
 
   if (loading) {
-    return <ListSkeleton />; // Display the skeleton while loading
+    return <ListSkeleton />;
   }
 
   if (error) {
@@ -87,7 +87,7 @@ const PokemonList: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonGrid>
-          {/* Type Selector */}
+        
           <IonRow>
             <IonCol size="12">
               <IonSelect
@@ -105,7 +105,7 @@ const PokemonList: React.FC = () => {
             </IonCol>
           </IonRow>
 
-          {/* Search Bar */}
+          
           <IonRow>
             <IonCol size="12">
               <IonInput

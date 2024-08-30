@@ -19,7 +19,7 @@ import {
 import axios from 'axios';
 
 const MovieDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Utilisation de useParams pour obtenir l'ID du film
+  const { id } = useParams<{ id: string }>(); 
   const [movie, setMovie] = useState<any>(null);
 
   useEffect(() => {
