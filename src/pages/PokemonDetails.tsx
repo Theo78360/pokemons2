@@ -14,6 +14,9 @@ import {
   IonRow,
   IonCol,
   IonButton,
+  IonSelect,
+  IonSelectOption,
+  IonInput,
   useIonRouter,
 } from '@ionic/react';
 
@@ -43,6 +46,8 @@ const PokemonList: React.FC = () => {
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>(''); // State to hold the search term
   const router = useIonRouter();
 
   useEffect(() => {
@@ -62,6 +67,23 @@ const PokemonList: React.FC = () => {
         setLoading(false);
       });
   }, []);
+
+  // Filter by type and search term
+  const filteredPokemon = pokemonData
+    .filter((pokemon) =>
+      selectedType ? pokemon.types?.some((type) => type.name === selectedType) : true
+    )
+    .filter((pokemon) =>
+      searchTerm
+        ? pokemon.name.fr.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          pokemon.name.en.toLowerCase().includes(searchTerm.toLowerCase())
+        : true
+    );
+
+  // Extract unique types, ensuring types array is handled safely
+  const uniqueTypes = Array.from(
+    new Set(pokemonData.flatMap((pokemon) => pokemon.types?.map((type) => type.name) || []))
+  );
 
   if (loading) {
     return <div>Loading...</div>;
@@ -84,12 +106,44 @@ const PokemonList: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonGrid>
+          {/* Type Selector */}
           <IonRow>
-            {pokemonData.map((pokemon) => (
+            <IonCol size="12">
+              <IonSelect
+                value={selectedType}
+                placeholder="Sélectionnez un type"
+                onIonChange={(e) => setSelectedType(e.detail.value)}
+              >
+                <IonSelectOption value="">Tous les types</IonSelectOption>
+                {uniqueTypes.map((type) => (
+                  <IonSelectOption key={type} value={type}>
+                    {type}
+                  </IonSelectOption>
+                ))}
+              </IonSelect>
+            </IonCol>
+          </IonRow>
+
+          {/* Search Bar */}
+          <IonRow>
+            <IonCol size="12">
+              <IonInput
+                value={searchTerm}
+                placeholder="Recherchez par nom"
+                onIonChange={(e) => setSearchTerm(e.detail.value!)}
+                debounce={300}
+              />
+            </IonCol>
+          </IonRow>
+
+          <IonRow>
+            {filteredPokemon.map((pokemon) => (
               <IonCol size="12" size-md="6" size-lg="4" key={pokemon.pokedex_id}>
                 <IonCard style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <IonCardHeader>
-                    <IonCardTitle>{pokemon.name.fr} (#{pokemon.pokedex_id})</IonCardTitle>
+                    <IonCardTitle>
+                      {pokemon.name.fr} (#{pokemon.pokedex_id})
+                    </IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <IonImg
@@ -97,10 +151,13 @@ const PokemonList: React.FC = () => {
                       alt={pokemon.name.fr}
                       style={{ width: '100px', height: '100px' }}
                     />
-                    <h3>Types</h3>
-                    {pokemon.types && pokemon.types.length > 0 ? (
+                    
+                    {pokemon.types?.length ? (
                       pokemon.types.map((type) => (
-                        <div key={type.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div
+                          key={type.name}
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        >
                           <IonImg src={type.image} alt={type.name} style={{ width: '30px', marginRight: '8px' }} />
                           <span>{type.name}</span>
                         </div>

@@ -14,6 +14,7 @@ import {
   IonLabel,
   IonList,
   IonThumbnail,
+  IonButton,
 } from '@ionic/react';
 import axios from 'axios';
 
@@ -45,13 +46,13 @@ const MovieDetailPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonCard>
-          <IonThumbnail>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <img
               src={movie.poster_path ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}` : 'assets/default-movie.png'}
               alt="Movie Poster"
-              style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+              style={{ width: '100%', maxWidth: '500px', height: 'auto', borderRadius: '10px', }}
             />
-          </IonThumbnail>
+          </div>
           <IonCardHeader>
             <IonCardTitle>{movie.title}</IonCardTitle>
           </IonCardHeader>
@@ -66,7 +67,6 @@ const MovieDetailPage: React.FC = () => {
                 <p>{movie.runtime ? `${movie.runtime} minutes` : 'N/A'}</p>
               </IonItem>
               <IonItem>
-                <IonLabel>Synopsis:</IonLabel>
                 <p>{movie.overview || 'N/A'}</p>
               </IonItem>
               <IonItem>
@@ -97,6 +97,15 @@ const MovieDetailPage: React.FC = () => {
                 <IonLabel>Collection:</IonLabel>
                 <p>{movie.belongs_to_collection ? movie.belongs_to_collection.name : 'N/A'}</p>
               </IonItem>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+              <IonButton
+                expand="block"
+                style={{ width: '150px', margin: '0 10px' }}
+                onClick={() => window.history.back()}
+              >
+                Retour
+              </IonButton>
+              </div>
             </IonList>
           </IonCardContent>
         </IonCard>
